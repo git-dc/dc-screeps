@@ -90,8 +90,8 @@ var utils = {
         return targets.length > 0
     },
     upg_home_controller: function(creep){
-        if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(creep.room.controller, {visualizePathStyle: {stroke: '#ffffff'}});
+        if(creep.upgradeController(vars.home.controller) == ERR_NOT_IN_RANGE) {
+            creep.moveTo(vars.home.controller, {visualizePathStyle: {stroke: '#ffffff'}});
         }
     },
     check_if_spawnable: function(parts){
