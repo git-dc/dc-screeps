@@ -34,7 +34,7 @@ var vars = {
     target_popul: function() {
 	var total = 0;
 	for (var typ in vars.target_nums){
-	    total+=vars.target_nums[typ];
+	    total+=vars.target_nums[typ].count;
 	};
 	return total
     }
