@@ -78,8 +78,8 @@ var utils = {
         }
         return sources.length > 0;
     },
-    collect: function(creep,what_room=vars.home,choice=1){
-        var sources = what_room.find(FIND_SOURCES);
+    collect: function(creep,choice=1){
+        var sources = vars.home.find(FIND_SOURCES);
         if(creep.harvest(sources[choice]) == ERR_NOT_IN_RANGE) {
             creep.moveTo(sources[choice], {visualizePathStyle: {stroke: '#ffaa00'}});
         }
