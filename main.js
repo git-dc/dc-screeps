@@ -11,7 +11,7 @@ var room_sources = Game.spawns["spn1"].room.find(FIND_SOURCES);
 
 module.exports.loop = function () {
     vars.vis.text("Dan's room",3,1);
-    var population = utils.census(roles);
+    var population = utils.census(['harv','upg','bld']);
     if (population.total < 4){vars.best_parts = vars.emergency_parts}
     else{worker_parts=vars.best_parts}
     utils.routines();
