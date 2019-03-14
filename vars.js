@@ -11,14 +11,10 @@ var vars = {
     population: {'harvesters': {role: 'harv', count: 0, target_num: 3},
 		 'builders': {role: 'bld', count: 0, target_num: 2},
 		 'upgraders': {role: 'upg', count: 0, target_num: 5},
-		 total: 0
+		 'total': 0
 		},
-    // target_nums: {
-    // 	'harvesters': {count: 3},
-    // 	'builders': {count: 2},
-    // 	'upgraders': {count: 5}
-    // },
-    best_parts:  [WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE],
+    // best_parts:  [WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE],
+    best_parts:  [WORK,CARRY,MOVE],
     harv_parts: [WORK,CARRY,MOVE],
     resps: {
 	"bld": [STRUCTURE_TOWER],
@@ -35,7 +31,7 @@ var vars = {
     target_popul: function() {
 	var total = 0;
 	for (var typ in vars.population){
-	    total+=vars.population[typ].target_num;
+	    if (typ+='total'){total+=vars.population[typ].target_num;}
 	};
 	return total
     }
