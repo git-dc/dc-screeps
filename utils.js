@@ -20,33 +20,22 @@ var utils = {
     
     /** @param {} **/
     census: function (){
-	var msg = "Tick: "+ Game.time + " Energy: "+vars.room_energy_ava()+'/'+vars.room_energy_cap();
+	var msg = "Tick: " + Game.time + " Energy: " + vars.room_energy_ava() + '/' + vars.room_energy_cap();
 	switch (utils.spawnable(vars.best_parts)){
 	case 0: msg+=' - OK'; break;
 	case 1: msg+=' - EH'; break;
 	case 2: msg+=' - NOT OK'; break;
-	case 3: msg+=' - undefined'; break;
-	    
+	case 3: msg+=' - undefined'; break;	    
 	}
-        // if (utils.spawnable(vars.best_parts)){msg+=' - OK'}
-        // else if (utils.spawn_budget(vars.best_parts)<vars.room_energy_ava()){msg+=' - EH'}
-        // else if (utils.spawn_budget(vars.best_parts)>vars.room_energy_cap()){msg+=' - NOT OK'}
-	
         var popul = vars.population;
         for (var typ in popul){
             popul[typ].count = _.filter(Game.creeps, (creep) => creep.memory.role == popul[typ].role).length;
 	    popul.total+=popul[typ].count;
 	    if (typ != 'total'){
-	    	msg+='\n'+typ+': '+popul[typ].count + '/' + vars.target_nums[typ].count;
+	    	msg+='\n'+typ+': '+popul[typ].count + '/' + popul[typ].target_num;
 	    }
         }
 	msg+='\nTotal population: ' + popul.total +'/'+ vars.target_popul();
-        // population.total =  population.harvesters.count+population.builders.count+population.upgraders.count;
-
-        // msg+='\nHarvesters: ' + population.harvesters.count +'/'+ vars.target_harv;
-        // msg+='\nBuilders: ' + population.builders.count +'/'+ vars.target_bld;
-        // msg+='\nUpgraders: ' + population.upgraders.count +'/'+ vars.target_upg;
-        
         utils.display(msg,Game.spawns['spn1']);
         return popul;
     },

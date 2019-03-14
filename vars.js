@@ -8,17 +8,18 @@
  */
 
 var vars = {
-    population: {'harvesters': {role: 'harv', count: 0},
-		 'builders': {role: 'bld', count: 0},
-		 'upgraders': {role: 'upg', count: 0}
+    population: {'harvesters': {role: 'harv', count: 0, target_num: 3},
+		 'builders': {role: 'bld', count: 0, target_num: 2},
+		 'upgraders': {role: 'upg', count: 0, target_num: 5},
+		 total: 0
 		},
-    target_nums: {
-	'harvesters': {count: 3},
-	'builders': {count: 2},
-	'upgraders': {count: 5}
-    },
+    // target_nums: {
+    // 	'harvesters': {count: 3},
+    // 	'builders': {count: 2},
+    // 	'upgraders': {count: 5}
+    // },
     best_parts:  [WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE],
-    harv_parts: [WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE],
+    harv_parts: [WORK,CARRY,MOVE],
     resps: {
 	"bld": [STRUCTURE_TOWER],
 	"harv": [STRUCTURE_TOWER,STRUCTURE_EXTENSION]
@@ -33,8 +34,8 @@ var vars = {
     room_energy_ava: function(){return Game.spawns["spn1"].room.energyAvailable},
     target_popul: function() {
 	var total = 0;
-	for (var typ in vars.target_nums){
-	    total+=vars.target_nums[typ].count;
+	for (var typ in vars.population){
+	    total+=vars.population[typ].target_num;
 	};
 	return total
     }
