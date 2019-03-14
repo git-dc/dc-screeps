@@ -35,7 +35,7 @@ var utils = {
 	    	msg+='\n'+typ+': '+popul[typ].count + '/' + popul[typ].target_num;
 	    }
         }
-	msg+='\nTotal population: ' + popul.total +'/'+ vars.target_popul();
+	msg+='\nTotal population: ' + popul['total'] +'/'+ vars.target_popul();
         utils.display(msg,Game.spawns['spn1']);
         return popul;
     },
