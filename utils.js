@@ -23,15 +23,16 @@ var utils = {
 	var msg = "Tick: " + Game.time + " Energy: " + vars.room_energy_ava() + '/' + vars.room_energy_cap();
 	switch (utils.spawnable(vars.best_parts)){
 	case 0: msg+=' - OK'; break;
-	case 1: msg+=' - EH'; break;
-	case 2: msg+=' - NOT OK'; break;
+	case 1: msg+=' - NOT OK'; break;
+	case 2: msg+=' - VERY NOT OK'; break;
 	case 3: msg+=' - undefined'; break;	    
 	}
         var popul = vars.population;
+	popul.total = 0
         for (var typ in popul){
 	    if (typ != 'total'){
 		popul[typ].count = _.filter(Game.creeps, (creep) => creep.memory.role == popul[typ].role).length;
-		popul['total']+=popul[typ].count;
+		popul.total += popul[typ].count;
 	    	msg+='\n'+typ+': '+popul[typ].count + '/' + popul[typ].target_num;
 	    }
         }
@@ -95,8 +96,8 @@ var utils = {
         }
     },
     spawnable: function(parts){
-	if (Game.spawns['spn1'].spawnCreep(parts, 'test',{memory: {role: 'harv'}, dryRun: true})==0){return 0;}
-	else if (utils.spawn_cost(parts)<vars.room_energy_ava()){return 1;}
+	if (Game.spawns['spn1'].spawnCreep(parts, 'test',{dryRun: true})==0){return 0;}
+	else if (utils.spawn_cost(parts)>vars.room_energy_ava() && utils.spawn_cost(parts)<vars.room_energy_cap()){return 1;}
 	else if (utils.spawn_cost(parts)>vars.room_energy_cap()){return 2;}
 	return 3;
     },

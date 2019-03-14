@@ -34,10 +34,11 @@ module.exports.loop = function () {
         
     }
     
-    if(population.builders.count < vars.target_bld) {utils.spawn_new('bld',vars.best_parts)}
-    if(population.upgraders.count < vars.target_upg) {utils.spawn_new('upg',vars.best_parts)}
-    if(population.harvesters.count < vars.target_harv) {utils.spawn_new('harv',vars.harv_parts)}
-
+    if(population.harvesters.count < vars.target_harv*0.5) {utils.spawn_new('harv',vars.harv_parts);}
+    else if(population.upgraders.count < 1) {utils.spawn_new('upg',vars.best_parts);}
+    else if(population.builders.count < vars.target_bld) {utils.spawn_new('bld',vars.best_parts);}
+    else if(population.harvesters.count < vars.target_harv) {utils.spawn_new('harv',vars.harv_parts);}
+    else if(population.upgraders.count < vars.target_upg) {utils.spawn_new('upg',vars.best_parts);}
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
         if(creep.memory.role == 'harv') {
