@@ -48,7 +48,7 @@ var utils = {
         // msg+='\nUpgraders: ' + population.upgraders.count +'/'+ vars.target_upg;
         
         utils.display(msg,Game.spawns['spn1']);
-        return population;
+        return popul;
     },
     /** @param {string} typ **/
     spawn_new: function(typ,parts=vars.best_parts){
