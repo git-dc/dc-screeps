@@ -31,7 +31,7 @@ var utils = {
         for (var typ in popul){
 	    if (typ != 'total'){
 		popul[typ].count = _.filter(Game.creeps, (creep) => creep.memory.role == popul[typ].role).length;
-		popul.total+=popul[typ].count;
+		popul['total']+=popul[typ].count;
 	    	msg+='\n'+typ+': '+popul[typ].count + '/' + popul[typ].target_num;
 	    }
         }
