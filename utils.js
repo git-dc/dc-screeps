@@ -102,7 +102,7 @@ var utils = {
 	return 3;
     },
     spawn_cost: function(parts){
-        spawn_cost = 0;
+        var spawn_cost = 0;
         for (var part in parts){
             if (parts[part] == WORK){spawn_cost+=100}
             else if (parts[part] == CARRY){spawn_cost+=50}
