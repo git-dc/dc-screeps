@@ -25,7 +25,7 @@ var utils = {
 	case 0: msg+=' - OK'; break;
 	case 1: msg+=' - NOT OK'; break;
 	case 2: msg+=' - VERY NOT OK'; break;
-	case 3: msg+=' - undefined'; break;	    
+	case 3: msg+=' - SO BAD, SO VERY BAD'; break;	    
 	}
         var popul = vars.population;
 	popul.total = 0
