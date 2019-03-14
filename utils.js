@@ -17,22 +17,33 @@ var utils = {
             linum+=1
         }
     },
+    
     /** @param {} **/
     census: function (){
-        var population = {harvesters: {role: 'harv', count: 0}, builders: {role: 'bld', count: 0}, upgraders: {role: 'upg', count: 0}};
-        for (var creep_type in population){
-            population[creep_type].count = _.filter(Game.creeps, (creep) => creep.memory.role == population[creep_type].role).length;
+	var msg = "Tick: "+ Game.time + " Energy: "+vars.room_energy_ava()+'/'+vars.room_energy_cap();
+	switch (utils.spawnable(vars.best_parts)){
+	case 0: msg+=' - OK'; break;
+	case 1: msg+=' - EH'; break;
+	case 2: msg+=' - NOT OK'; break;
+	case 3: msg+=' - undefined'; break;
+	    
+	}
+        // if (utils.spawnable(vars.best_parts)){msg+=' - OK'}
+        // else if (utils.spawn_budget(vars.best_parts)<vars.room_energy_ava()){msg+=' - EH'}
+        // else if (utils.spawn_budget(vars.best_parts)>vars.room_energy_cap()){msg+=' - NOT OK'}
+	
+        var popul = vars.population;
+        for (var typ in popul){
+            popul[typ].count = _.filter(Game.creeps, (creep) => creep.memory.role == popul[typ].role).length;
+	    popul.total+=popul[typ].count;
+	    msg+='\n'+typ+': '+popul[typ].count + '/' + vars.target_nums[typ].count;
         }
-        population.total = population.harvesters.count+population.builders.count+population.upgraders.count;
-        var msg = "Tick: "+ Game.time + " Energy: "+vars.room_energy_ava()+'/'+vars.room_energy_cap();
-        if (utils.spawnable(vars.best_parts)){msg+=' - OK'}
-        else if (utils.spawn_budget(vars.best_parts)<vars.room_energy_ava()){msg+=' - EH'}
-        else if (utils.spawn_budget(vars.best_parts)>vars.room_energy_cap()){msg+=' - NOT OK'}
-        target_pop= vars.target_upg + vars.target_bld + vars.target_harv;
-        msg+='\nTotal population: ' + population.total +'/'+ target_pop;
-        msg+='\nHarvesters: ' + population.harvesters.count +'/'+ vars.target_harv;
-        msg+='\nBuilders: ' + population.builders.count +'/'+ vars.target_bld;
-        msg+='\nUpgraders: ' + population.upgraders.count +'/'+ vars.target_upg;
+	msg+='\nTotal population: ' + popul.total +'/'+ vars.target_popul();
+        // population.total =  population.harvesters.count+population.builders.count+population.upgraders.count;
+
+        // msg+='\nHarvesters: ' + population.harvesters.count +'/'+ vars.target_harv;
+        // msg+='\nBuilders: ' + population.builders.count +'/'+ vars.target_bld;
+        // msg+='\nUpgraders: ' + population.upgraders.count +'/'+ vars.target_upg;
         
         utils.display(msg,Game.spawns['spn1']);
         return population;
@@ -93,9 +104,12 @@ var utils = {
         }
     },
     spawnable: function(parts){
-        return Game.spawns['spn1'].spawnCreep(parts, 'test',{memory: {role: 'harv'}, dryRun: true})==0;
+	if (Game.spawns['spn1'].spawnCreep(parts, 'test',{memory: {role: 'harv'}, dryRun: true})==0){return 0;}
+	else if (utils.spawn_cost(parts)<vars.room_energy_ava()){return 1;}
+	else if (utils.spawn_cost(parts)>vars.room_energy_cap()){return 2;}
+	return 3;
     },
-    spawn_budget: function(parts){
+    spawn_cost: function(parts){
         spawn_cost = 0;
         for (var part in parts){
             if (parts[part] == WORK){spawn_cost+=100}
@@ -108,11 +122,13 @@ var utils = {
         var targetx = location.pos.x;
         var targety = location.pos.y;
         dist = ((creep.x-targetx)**2 + (creep.y-targety)**2)**0.5;
+	return dist;
     },
     l1dist: function(creep, location){
         var targetx = location.pos.x;
         var targety = location.pos.y;
         dist = (creep.x-targetx) + (creep.y-targety);
+	return dist;
     },
     
     // #################################################################################
@@ -123,10 +139,10 @@ var utils = {
                 creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
             }    
         }
-        return targets.length > 0
+        return targets.length > 0;
     },
     gorepair: function (creep){
-        console.log("repairing")
+        console.log("repairing");
         var targets = vars.home.find(
             FIND_STRUCTURES, {
                 filter: (structure) => {return (structure.structureType == STRUCTURE_ROAD || structure.structureType == STRUCTURE_TOWER || structure.structureType == STRUCTURE_CONTAINER)
@@ -138,7 +154,7 @@ var utils = {
                 creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
             }
         }
-        return targets.length > 0
+        return targets.length > 0;
     }
     
 };
