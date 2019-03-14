@@ -36,7 +36,9 @@ var utils = {
         for (var typ in popul){
             popul[typ].count = _.filter(Game.creeps, (creep) => creep.memory.role == popul[typ].role).length;
 	    popul.total+=popul[typ].count;
-	    msg+='\n'+typ+': '+popul[typ].count + '/' + vars.target_nums[typ].count;
+	    if (typ != 'total'){
+	    	msg+='\n'+typ+': '+popul[typ].count + '/' + vars.target_nums[typ].count;
+	    }
         }
 	msg+='\nTotal population: ' + popul.total +'/'+ vars.target_popul();
         // population.total =  population.harvesters.count+population.builders.count+population.upgraders.count;
