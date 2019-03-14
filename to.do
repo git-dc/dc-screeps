@@ -5,4 +5,6 @@
 [ ] - rewrite path finding, fix weirdness
 [ ] - add role.defender
 [ ] - conquer the pestering ratmolerat at E6N17
+[ ] - anticipate creep death and make new to replace/ alternatively, calculate if is cheaper to renewCreep()
+[ ] - custom course of action near death time
 [ ] - 
