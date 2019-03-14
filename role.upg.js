@@ -15,7 +15,7 @@ var upgrader = {
         if(!creep.memory.upgrading && creep.carry.energy == creep.carryCapacity) {
             creep.memory.upgrading = true;
             creep.memory.empty = false;
-            creep.say('⚡ upgrade');
+            creep.say('upgrade');
         }
 
         if(creep.memory.upgrading) {

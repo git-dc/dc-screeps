@@ -11,7 +11,7 @@ var harvester = {
             if (utils.pickup_dead(creep)){}
             else if (utils.collect(creep)){}
         }
-        else if(harvester.maintain(creep)){}
+        else if(utils.maintain(creep)){}
         else if(utils.upg_controller(creep)){}
     },
     

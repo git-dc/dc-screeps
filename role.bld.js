@@ -12,13 +12,13 @@ var builder = {
         if(!creep.memory.building && creep.carry.energy == creep.carryCapacity) {
             creep.memory.building = true;
             creep.memory.empty = false;
-            creep.say('⚡ build');
+            creep.say('build');
         }
 
         if(creep.memory.building) {
             if (utils.gobuild(creep)){}
             // else if(builder.gorepair(creep)){}
-            else{builder.maintain(creep);}
+            else{utils.maintain(creep);}
         }
         else if(utils.collect(creep)){}
     },
