@@ -5,32 +5,31 @@ var utils = require('utils');
 var vars = require('vars');
 
 var worker_parts = [];
-
-var roles = ['harv','upg','bld'];
+// var roles = ['harv','upg','bld'];
 var room_sources = Game.spawns["spn1"].room.find(FIND_SOURCES);
-var population;
+// var population;
 
 module.exports.loop = function () {
     vars.vis.text("Dan's room",3,1);
-    population = utils.census(roles);
-    if (population.total < 4){vars.best_parts = vars.emergency_parts}else{worker_parts=vars.best_parts}
-    
+    var population = utils.census(roles);
+    if (population.total < 4){vars.best_parts = vars.emergency_parts}
+    else{worker_parts=vars.best_parts}
     utils.routines();
     
     var tower = Game.getObjectById('5c88fd035bea8e153b922b11');
     if(tower) {
         // var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-        var interlopers = Game.rooms['E7N17'].find(FIND_CREEPS, {filter: (creep) => {return !creep.my}});
+        var interlopers = vars.home.find(FIND_CREEPS, {filter: (creep) => {return !creep.my}});
         if(interlopers.length > 0) {
             tower.attack(interlopers[0]);
         }
         else{
-        var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-            filter: (structure) => structure.hits < structure.hitsMax && structure.structureType != STRUCTURE_WALL
-        });
-        if(closestDamagedStructure) {
-            tower.repair(closestDamagedStructure);
-        }
+            var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
+		filter: (structure) => structure.hits < structure.hitsMax && structure.structureType != STRUCTURE_WALL
+            });
+            if(closestDamagedStructure) {
+		tower.repair(closestDamagedStructure);
+            }
         }
         
     }

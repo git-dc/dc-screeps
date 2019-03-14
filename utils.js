@@ -25,9 +25,9 @@ var utils = {
         }
         population.total = population.harvesters.count+population.builders.count+population.upgraders.count;
         var msg = "Tick: "+ Game.time + " Energy: "+vars.room_energy_ava()+'/'+vars.room_energy_cap();
-        if (utils.check_if_spawnable(vars.best_parts)){msg+=' - READY'}
-        else if (utils.spawn_within_budget(vars.best_parts)){msg+=' - WAIT'}
-        else if (!utils.spawn_within_budget(vars.best_parts)){msg+=' - NOT OK'}
+        if (utils.spawnable(vars.best_parts)){msg+=' - OK'}
+        else if (utils.spawn_budget(vars.best_parts)<vars.room_energy_ava()){msg+=' - EH'}
+        else if (utils.spawn_budget(vars.best_parts)>vars.room_energy_cap()){msg+=' - NOT OK'}
         target_pop= vars.target_upg + vars.target_bld + vars.target_harv;
         msg+='\nTotal population: ' + population.total +'/'+ target_pop;
         msg+='\nHarvesters: ' + population.harvesters.count +'/'+ vars.target_harv;
@@ -44,7 +44,7 @@ var utils = {
         // console.log('trying to spawn '+typ+' with parts: '+parts)
         if (spawn.spawnCreep(parts, newName,{memory: {role: typ, empty: true}, dryRun: true})==0){
             // spawn.saying('Spawning new: ' + newName);
-            spawn.spawnCreep(parts, newName,{memory: {role: typ, empty: true}});
+            spawn.spawnCreep(parts, newName,{memory: {role: typ, empty: true, resps: vars.resps[typ]}});
         }
     },
     /** @param {} **/
@@ -65,22 +65,19 @@ var utils = {
         if(creep.withdraw(sources[0],RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
         }
-        return sources.length > 0
+        return sources.length > 0;
     },
-    collect: function(creep,room_num="E7N17",choice=1){
-        var sources = Game.rooms[room_num].find(FIND_SOURCES);
+    collect: function(creep,what_room=vars.home,choice=1){
+        var sources = what_room.find(FIND_SOURCES);
         if(creep.harvest(sources[choice]) == ERR_NOT_IN_RANGE) {
             creep.moveTo(sources[choice], {visualizePathStyle: {stroke: '#ffaa00'}});
         }
-        return sources.length > 0
+        return sources.length > 0;
     },
     maintain: function(creep){
-        var targets = Game.rooms["E7N17"].find(FIND_MY_STRUCTURES, {
+        var targets = vars.home.find(FIND_STRUCTURES, {
             filter: (structure) => {
-                return (structure.structureType == STRUCTURE_EXTENSION 
-                    // || structure.structureType == STRUCTURE_SPAWN 
-                    || structure.structureType == STRUCTURE_TOWER 
-                    ) && structure.energy < structure.energyCapacity;
+                return (creep.memory.resps.includes(structure.structureType)) && structure.energy < structure.energyCapacity;
             }
         });
         if(targets.length > 0) {
@@ -88,24 +85,24 @@ var utils = {
                 creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
             }
         }
-        return targets.length > 0
+        return targets.length > 0;
     },
     upg_home_controller: function(creep){
         if(creep.upgradeController(vars.home.controller) == ERR_NOT_IN_RANGE) {
             creep.moveTo(vars.home.controller, {visualizePathStyle: {stroke: '#ffffff'}});
         }
     },
-    check_if_spawnable: function(parts){
-        return Game.spawns['spn1'].spawnCreep(parts, 'test',{memory: {role: 'harv'}, dryRun: true})==0
+    spawnable: function(parts){
+        return Game.spawns['spn1'].spawnCreep(parts, 'test',{memory: {role: 'harv'}, dryRun: true})==0;
     },
-    spawn_within_budget: function(parts){
+    spawn_budget: function(parts){
         spawn_cost = 0;
         for (var part in parts){
             if (parts[part] == WORK){spawn_cost+=100}
             else if (parts[part] == CARRY){spawn_cost+=50}
             else if (parts[part] == MOVE){spawn_cost+=50}
         }
-        return spawn_cost < vars.room_energy_cap()
+        return spawn_cost;
     },
     l2dist: function(creep, location){
         var targetx = location.pos.x;
@@ -116,7 +113,34 @@ var utils = {
         var targetx = location.pos.x;
         var targety = location.pos.y;
         dist = (creep.x-targetx) + (creep.y-targety);
+    },
+    
+    // #################################################################################
+    gobuild: function (creep){
+        var targets = vars.home.find(FIND_CONSTRUCTION_SITES);
+        if(targets.length>0) {
+            if(creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
+            }    
+        }
+        return targets.length > 0
+    },
+    gorepair: function (creep){
+        console.log("repairing")
+        var targets = vars.home.find(
+            FIND_STRUCTURES, {
+                filter: (structure) => {return (structure.structureType == STRUCTURE_ROAD || structure.structureType == STRUCTURE_TOWER || structure.structureType == STRUCTURE_CONTAINER)
+                && structure.hits < structure.hitsMax;}
+            }
+        );
+        if(targets.length > 0) {
+            if(creep.repair(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
+            }
+        }
+        return targets.length > 0
     }
+    
 };
 
 module.exports = utils;

@@ -1,4 +1,4 @@
-var vis = Game.rooms['E7N17'].visual;
+var vars = require("vars");
 var utils = require('utils');
 var upgrader = {
 
@@ -22,7 +22,7 @@ var upgrader = {
             if(utils.upg_home_controller(creep)){}
         }
         else if(utils.pickup_dead(creep)){}
-        else if(utils.collect(creep,'E7N17',0)){}
+        else if(utils.collect(creep,choice=0)){}
     }
 };
 
