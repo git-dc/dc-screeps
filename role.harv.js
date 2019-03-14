@@ -8,7 +8,7 @@ var harvester = {
         else if (creep.carry.energy == 0){creep.memory.empty = true;}
         
         if(creep.memory.empty) {
-            if (harvester.pickup_dead(creep)){}
+            if (utils.pickup_dead(creep)){}
             else if (harvester.collect(creep)){}
         }
         else if(harvester.maintain(creep)){}
@@ -38,8 +38,8 @@ var harvester = {
         var targets = Game.rooms["E7N17"].find(FIND_MY_STRUCTURES, {
             filter: (structure) => {
                 return (structure.structureType == STRUCTURE_EXTENSION 
-                    || structure.structureType == STRUCTURE_SPAWN 
-                    || structure.structureType == STRUCTURE_TOWER 
+                    || structure.structureType == STRUCTURE_CONTAINER 
+                    // || structure.structureType == STRUCTURE_TOWER 
                     ) && structure.energy < structure.energyCapacity;
             }
         });

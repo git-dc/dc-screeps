@@ -1,7 +1,3 @@
-/*
-edits passed through git
-try 2
-*/
 var harvester = require('role.harv');
 var upgrader = require('role.upg');
 var builder = require('role.bld');
@@ -21,24 +17,27 @@ module.exports.loop = function () {
     
     utils.routines();
     
-    var tower = Game.getObjectById('TOWER_ID');
+    var tower = Game.getObjectById('5c88fd035bea8e153b922b11');
     if(tower) {
+        // var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+        var interlopers = Game.rooms['E7N17'].find(FIND_CREEPS, {filter: (creep) => {return !creep.my}});
+        if(interlopers.length > 0) {
+            tower.attack(interlopers[0]);
+        }
+        else{
         var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-            filter: (structure) => structure.hits < structure.hitsMax
+            filter: (structure) => structure.hits < structure.hitsMax && structure.structureType != STRUCTURE_WALL
         });
         if(closestDamagedStructure) {
             tower.repair(closestDamagedStructure);
         }
-
-        var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-        if(closestHostile) {
-            tower.attack(closestHostile);
         }
+        
     }
     
     if(population.builders.count < vars.target_bld) {utils.spawn_new('bld',vars.best_parts)}
     if(population.upgraders.count < vars.target_upg) {utils.spawn_new('upg',vars.best_parts)}
-    if(population.harvesters.count < vars.target_harv) {utils.spawn_new('harv',vars.best_parts)}
+    if(population.harvesters.count < vars.target_harv) {utils.spawn_new('harv',vars.harv_parts)}
 
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];

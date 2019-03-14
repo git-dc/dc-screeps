@@ -41,9 +41,9 @@ var utils = {
     spawn_new: function(typ,parts=vars.best_parts){
         var newName = typ + Game.time%10000;
         var spawn = Game.spawns['spn1'];
-        console.log('trying to spawn '+typ+'with parts: '+parts)
+        // console.log('trying to spawn '+typ+' with parts: '+parts)
         if (spawn.spawnCreep(parts, newName,{memory: {role: typ, empty: true}, dryRun: true})==0){
-            console.log('Spawning new: ' + newName);
+            // spawn.saying('Spawning new: ' + newName);
             spawn.spawnCreep(parts, newName,{memory: {role: typ, empty: true}});
         }
     },
@@ -53,14 +53,15 @@ var utils = {
             if(!Game.creeps[name]) {
                 delete Memory.creeps[name];
                 console.log('Clearing non-existing creep memory:', name);
-            
             }
         }
     },
     pickup_dead: function(creep){
-        var sources = creep.room.find(FIND_TOMBSTONES,{
-            filter: (tomb) => {return (tomb.store["RESOURCE_ENERGY"] > 0)}
-        });
+        var sources = creep.room.find(FIND_TOMBSTONES
+        // ,{
+            // filter: (tomb) => {return (tomb.store["RESOURCE_ENERGY"] > 0)}
+        // }
+        );
         if(creep.withdraw(sources[0],RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
         }
@@ -77,7 +78,7 @@ var utils = {
         var targets = Game.rooms["E7N17"].find(FIND_MY_STRUCTURES, {
             filter: (structure) => {
                 return (structure.structureType == STRUCTURE_EXTENSION 
-                    || structure.structureType == STRUCTURE_SPAWN 
+                    // || structure.structureType == STRUCTURE_SPAWN 
                     || structure.structureType == STRUCTURE_TOWER 
                     ) && structure.energy < structure.energyCapacity;
             }

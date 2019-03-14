@@ -17,7 +17,7 @@ var builder = {
 
         if(creep.memory.building) {
             if (builder.gobuild(creep)){}
-            else if(builder.gorepair(creep)){}
+            // else if(builder.gorepair(creep)){}
             else{builder.maintain(creep)}
         }
         else if(utils.collect(creep)){}
@@ -54,12 +54,10 @@ var builder = {
     },
     // #################################################################################
     gorepair: function (creep){
+        console.log("repairing")
         var targets = Game.rooms["E7N17"].find(
             FIND_STRUCTURES, {
-                filter: (structure) => {return (structure.structureType == STRUCTURE_ROAD ||
-                                                structure.structureType == STRUCTURE_TOWER ||
-                                                structure.structureType == STRUCTURE_WALL
-                )
+                filter: (structure) => {return (structure.structureType == STRUCTURE_ROAD || structure.structureType == STRUCTURE_TOWER || structure.structureType == STRUCTURE_CONTAINER)
                 && structure.hits < structure.hitsMax;}
             }
         );

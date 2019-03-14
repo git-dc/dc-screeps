@@ -20,8 +20,8 @@ var upgrader = {
 
         if(creep.memory.upgrading) {
             if(utils.upg_home_controller(creep)){}
-        else if(utils.pickup_dead(creep)){}
         }
+        else if(utils.pickup_dead(creep)){}
         else if(utils.collect(creep,'E7N17',0)){}
     }
 };
