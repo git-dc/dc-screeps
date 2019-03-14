@@ -31,7 +31,7 @@ var vars = {
     target_popul: function() {
 	var total = 0;
 	for (var typ in vars.population){
-	    if (typ+='total'){total+=vars.population[typ].target_num;}
+	    if (typ!='total'){total+=vars.population[typ].target_num;}
 	};
 	return total
     }
