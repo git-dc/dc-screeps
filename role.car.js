@@ -8,8 +8,9 @@ var carrier = {
         else if (creep.carry.energy == 0){creep.memory.empty = true;}
         
         if(creep.memory.empty) {
-            if (utils.pickup_dead(creep)){}
-            else if (utils.collect(creep)){}
+            if (utils.take(creep)){}
+	    else {console.log('Carrier '+creep.name+' failed to take');}
+            // else if (utils.collect(creep)){}
         }
         else if(utils.maintain(creep)){}
         else if(utils.upg_home_controller(creep)){}

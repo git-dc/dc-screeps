@@ -85,6 +85,18 @@ var utils = {
      * @param {Creep} creep 
      * @param {int} choice
      **/
+    take: function(creep,choice=1){
+        var sources = vars.home.find(FIND_STRUCTURES, {filter: (structure) => {return structure.structureType == STRUCTURE_CONTAINER && structure.store > creep.carryCapacity;}});
+        if(creep.withdraw(sources[choice]) == ERR_NOT_IN_RANGE) {
+            creep.moveTo(sources[choice], {visualizePathStyle: {stroke: '#ffaa00'}});
+        }
+        return sources.length > 0;
+    },
+    
+    /** 
+     * @param {Creep} creep 
+     * @param {int} choice
+     **/
     collect: function(creep,choice=1){
         var sources = vars.home.find(FIND_SOURCES);
         if(creep.harvest(sources[choice]) == ERR_NOT_IN_RANGE) {
@@ -165,6 +177,17 @@ var utils = {
         var targetx = location.pos.x;
         var targety = location.pos.y;
         dist = (creep.x-targetx) + (creep.y-targety);
+	return dist;
+    },
+    
+    /** 
+     * @param {Creep} creep
+     * @param {Object} location 
+     **/
+    l8dist: function(creep, location){
+        var targetx = location.pos.x;
+        var targety = location.pos.y;
+        dist = Math.max(creep.x-targetx, creep.y-targety);
 	return dist;
     },
     
