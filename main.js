@@ -1,23 +1,28 @@
-var harvester = require('role.harv');
-var upgrader = require('role.upg');
-var builder = require('role.bld');
+// var harvester = require('role.harv');
+// var upgrader = require('role.upg');
+// var builder = require('role.bld');
+var role_names = ['harv','bld','upg','car','mnr','cln'];
+var roles = {};
+for (var role in role_names){
+    roles[role_names[role]] = require('role.'+role_names[role]);
+}
+console.log(roles);
+// var roles = {'harv':require('role.harv'),'upg':Prequire('role.upg'),'bld':require('role.bld')};
 var utils = require('utils');
 var vars = require('vars');
 
 var worker_parts = [];
-// var roles = ['harv','upg','bld'];
 var room_sources = Game.spawns["spn1"].room.find(FIND_SOURCES);
-// var population;
 
 module.exports.loop = function () {
     vars.vis.text("Dan's room",3,1);
     var population = utils.census(['harv','upg','bld']);
-    if (population.total < 4){vars.best_parts = vars.emergency_parts}
-    else{worker_parts=vars.best_parts}
+    if (population.total < 4){vars.best_parts = vars.emergency_parts;}
+    else {worker_parts=vars.best_parts;}
     utils.routines();
     
     var tower = Game.getObjectById('5c88fd035bea8e153b922b11');
-    if(tower) {
+    if (tower) {
         // var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         var interlopers = vars.home.find(FIND_CREEPS, {filter: (creep) => {return !creep.my}});
         if(interlopers.length > 0) {
@@ -34,22 +39,24 @@ module.exports.loop = function () {
         
     }
     
-    if(population.harvesters.count < vars.target_harv*0.5) {utils.spawn_new('harv',vars.harv_parts);}
+    if (population.harvesters.count < vars.target_harv*0.5) {utils.spawn_new('harv',vars.harv_parts);}
     else if(population.upgraders.count < 1) {utils.spawn_new('upg',vars.best_parts);}
     else if(population.builders.count < vars.target_bld) {utils.spawn_new('bld',vars.best_parts);}
     else if(population.harvesters.count < vars.target_harv) {utils.spawn_new('harv',vars.harv_parts);}
     else if(population.upgraders.count < vars.target_upg) {utils.spawn_new('upg',vars.best_parts);}
+
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
-        if(creep.memory.role == 'harv') {
-            harvester.run(creep);
-        }
-        if(creep.memory.role == 'upg') {
-            upgrader.run(creep);
-        }
-        if(creep.memory.role == 'bld') {
-            builder.run(creep);
-        }
+	roles[creep.memory.role].run(creep);
+        // if(creep.memory.role == 'harv') {
+        //     harvester.run(creep);
+        // }
+        // if(creep.memory.role == 'upg') {
+        //     upgrader.run(creep);
+        // }
+        // if(creep.memory.role == 'bld') {
+        //     builder.run(creep);
+        // }
     }
 }
 

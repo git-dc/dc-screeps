@@ -4,14 +4,8 @@ var utils = require('utils');
 var builder = {
     /** @param {Creep} creep **/
     run: function(creep) {
-        if(creep.carry.energy == 0) {
-            creep.memory.empty = true;
-            creep.say('harvest');
-        }
-        if(creep.carry.energy == creep.carryCapacity) {
-            creep.memory.empty = false;
-            creep.say('build');
-        }
+        if(creep.carry.energy == creep.carryCapacity) {creep.memory.empty = false; creep.say('build');}
+        else if(creep.carry.energy == 0) {creep.memory.empty = true; creep.say('harvest');}
 
         if(creep.memory.empty) {
 	    if(utils.collect(creep)){}
