@@ -13,8 +13,7 @@ var vars = {
 		 'harvesters': {role: 'harv', count: 0, target_num: 3},
 		 'builders': {role: 'bld', count: 0, target_num: 2},
 		 'upgraders': {role: 'upg', count: 0, target_num: 5},
-
-		 'total': 0
+		 'total': {role: 'all', count: 0, target_num: vars.target_popul()}
 		},
     // best_parts:  [WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE],
     best_parts:  [WORK,CARRY,MOVE],

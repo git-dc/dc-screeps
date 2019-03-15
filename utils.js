@@ -31,15 +31,15 @@ var utils = {
 	case 3: msg+=' - SO BAD, SO VERY BAD'; break;	    
 	}
         var popul = vars.population;
-	popul.total = 0
+	popul.total.count = 0;
         for (var typ in popul){
 	    if (typ != 'total'){
 		popul[typ].count = _.filter(Game.creeps, (creep) => creep.memory.role == popul[typ].role).length;
-		popul.total += popul[typ].count;
-	    	msg+='\n'+typ+': '+popul[typ].count + '/' + popul[typ].target_num;
+		popul.total.count += popul[typ].count;
 	    }
+	    msg+='\n'+typ+': '+popul[typ].count + '/' + popul[typ].target_num;
         }
-	msg+='\nTotal population: ' + popul['total'] +'/'+ vars.target_popul();
+	// msg+='\nTotal population: ' + popul['total'] +'/'+ vars.target_popul();
         utils.display(msg,Game.spawns['spn1']);
         return popul;
     },
