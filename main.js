@@ -1,13 +1,7 @@
-// var harvester = require('role.harv');
-// var upgrader = require('role.upg');
-// var builder = require('role.bld');
 var role_names = ['harv','bld','upg','car','mnr','cln'];
 var roles = {};
-for (var role in role_names){
-    roles[role_names[role]] = require('role.'+role_names[role]);
-}
-console.log(roles);
-// var roles = {'harv':require('role.harv'),'upg':Prequire('role.upg'),'bld':require('role.bld')};
+for (var role in role_names){roles[role_names[role]] = require('role.'+role_names[role]);}
+
 var utils = require('utils');
 var vars = require('vars');
 
@@ -48,15 +42,6 @@ module.exports.loop = function () {
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
 	roles[creep.memory.role].run(creep);
-        // if(creep.memory.role == 'harv') {
-        //     harvester.run(creep);
-        // }
-        // if(creep.memory.role == 'upg') {
-        //     upgrader.run(creep);
-        // }
-        // if(creep.memory.role == 'bld') {
-        //     builder.run(creep);
-        // }
     }
 }
 
