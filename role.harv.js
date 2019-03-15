@@ -13,7 +13,7 @@ var harvester = {
         }
         else if(utils.maintain(creep)){}
         else if(utils.upg_home_controller(creep)){}
-    },    
+    }
 };
 
 module.exports = harvester;
