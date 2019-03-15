@@ -13,7 +13,7 @@ var vars = {
 		 'harvesters': {role: 'harv', count: 0, target_num: 3},
 		 'builders': {role: 'bld', count: 0, target_num: 2},
 		 'upgraders': {role: 'upg', count: 0, target_num: 5},
-		 'total': {role: 'all', count: 0, target_num: vars.target_popul()}
+		 'total': {role: 'all', count: 0, target_num: 0}
 		},
     // best_parts:  [WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE],
     best_parts:  [WORK,CARRY,MOVE],
@@ -35,6 +35,7 @@ var vars = {
 	for (var typ in vars.population){
 	    if (typ!='total'){total+=vars.population[typ].target_num;}
 	};
+	vars.population.total.target_num = total;
 	return total;
     }
 

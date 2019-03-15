@@ -32,6 +32,7 @@ var utils = {
 	}
         var popul = vars.population;
 	popul.total.count = 0;
+	vars.target_popul();
         for (var typ in popul){
 	    if (typ != 'total'){
 		popul[typ].count = _.filter(Game.creeps, (creep) => creep.memory.role == popul[typ].role).length;
