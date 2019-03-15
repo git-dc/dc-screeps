@@ -1,7 +1,7 @@
 var vars = require('vars');
 var utils = require('utils');
 
-var harvester = {
+var carrier = {
     /** @param {Creep} creep **/
     run: function(creep) {
         if (creep.carry.energy == creep.carryCapacity){creep.memory.empty = false;}
@@ -10,12 +10,11 @@ var harvester = {
         if(creep.memory.empty) {
             if (utils.pickup_dead(creep)){}
             else if (utils.collect(creep)){}
-	    else {console.log('Harvester '+creep.name+' failed to harvest');}
         }
         else if(utils.maintain(creep)){}
         else if(utils.upg_home_controller(creep)){}
-	else {console.log('Harvester '+creep.name+' failed to contribute');}
+	else {console.log('Carrier '+creep.name+' failed to contribute');}
     }
 };
 
-module.exports = harvester;
+module.exports = carrier;

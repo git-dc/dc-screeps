@@ -1,27 +1,29 @@
 var vars = require('vars');
 var utils = require('utils');
-var builder = {
 
+var builder = {
     /** @param {Creep} creep **/
     run: function(creep) {
-        if(creep.memory.building && creep.carry.energy == 0) {
-            creep.memory.building = false;
+        if(creep.carry.energy == 0) {
             creep.memory.empty = true;
             creep.say('harvest');
         }
-        if(!creep.memory.building && creep.carry.energy == creep.carryCapacity) {
-            creep.memory.building = true;
+        if(creep.carry.energy == creep.carryCapacity) {
             creep.memory.empty = false;
             creep.say('build');
         }
 
-        if(creep.memory.building) {
+        if(creep.memory.empty) {
+	    if(utils.collect(creep)){}
+	    else {console.log('Builder '+creep.name+' failed to harvest');}
+	}
+	else{
             if (utils.gobuild(creep)){}
             // else if(builder.gorepair(creep)){}
-            else{utils.maintain(creep);}
+            else if(utils.maintain(creep)){}
+	    else {console.log('Builder '+creep.name+' failed to contribute');}
         }
-        else if(utils.collect(creep)){}
-    },
+    }
 };
 
 module.exports = builder;
