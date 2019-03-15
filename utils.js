@@ -135,11 +135,12 @@ var utils = {
 
     /** @param {Creep} creep **/
     upg_home_controller: function(creep){
-        if(creep.upgradeController(vars.home.controller) == ERR_NOT_IN_RANGE) {
+	var status = creep.upgradeController(vars.home.controller);
+        if(status == ERR_NOT_IN_RANGE) {
             creep.moveTo(vars.home.controller, {visualizePathStyle: {stroke: 'white'}});
 	    return true;
         }
-	return false;
+	return status == 0;
     },
 
     /** @param {Array} parts **/
