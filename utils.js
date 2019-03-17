@@ -61,6 +61,7 @@ var utils = {
     
     /** @param {} **/
     routines: function(){
+    	vars.vis.text("Dan's room",3,1);		
         for(var name in Memory.creeps) {
             if(!Game.creeps[name]) {
                 delete Memory.creeps[name];
@@ -220,6 +221,22 @@ var utils = {
             }
         }
         return targets.length > 0;
+    },
+    tower: {
+	/** @param {StructureTower} tower **/
+	run: function(tower){
+	    console.log(tower);
+            var interlopers = tower.room.findClosestByRange(FIND_CREEPS, {filter: (creep) => {return !creep.my}});
+            if(interlopers) {tower.attack(interlopers);}
+            else{
+		var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
+		    filter: (structure) => structure.hits < structure.hitsMax && structure.structureType != STRUCTURE_WALL
+		});
+		if(closestDamagedStructure) {
+		    tower.repair(closestDamagedStructure);
+		}
+            }   	   
+	}
     }
     
 };

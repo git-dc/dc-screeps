@@ -1,5 +1,5 @@
-var role_names = ['harv','bld','upg','car','mnr','cln'];
-var roles = {};
+
+var role_names = ['harv','bld','upg','car','mnr','cln']; var roles = {};
 for (var role in role_names){roles[role_names[role]] = require('role.'+role_names[role]);}
 
 var utils = require('utils');
@@ -9,28 +9,29 @@ var worker_parts = [];
 var room_sources = Game.spawns["spn1"].room.find(FIND_SOURCES);
 
 module.exports.loop = function () {
-    vars.vis.text("Dan's room",3,1);
+    
     var population = utils.census(['harv','upg','bld']);
-    if (population.total < 4){vars.best_parts = vars.emergency_parts;}
-    else {worker_parts=vars.best_parts;}
+
+    if (population.total < 4){vars.best_parts = vars.emergency_parts;} else {worker_parts=vars.best_parts;}
     utils.routines();
     
-    var tower = Game.getObjectById('5c88fd035bea8e153b922b11');
-    if (tower) {
-        // var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-        var interlopers = vars.home.find(FIND_CREEPS, {filter: (creep) => {return !creep.my}});
-        if(interlopers.length > 0) {
-            tower.attack(interlopers[0]);
-        }
-        else{
-            var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-		filter: (structure) => structure.hits < structure.hitsMax && structure.structureType != STRUCTURE_WALL
-            });
-            if(closestDamagedStructure) {
-		tower.repair(closestDamagedStructure);
-            }
-        }
-        
+    var towers = vars.home.find(FIND_STRUCTURES, {filter: (struct) => struct.structureType == STRUCTURE_TOWER});
+    for (var tower in towers){
+	utils.tower.run(tower);
+	// console.log(tower);
+        // var interlopers = vars.home.find(FIND_CREEPS, {filter: (creep) => {return !creep.my}});
+        // if(interlopers.length > 0) {
+	//     tower.attack(interlopers[0]);
+        // }
+        // else{
+	//     var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
+	// 	filter: (structure) => structure.hits < structure.hitsMax && structure.structureType != STRUCTURE_WALL
+	//     });
+	//     if(closestDamagedStructure) {
+	// 	tower.repair(closestDamagedStructure);
+	//     }
+        // }
+   	
     }
     
     if (population.harvesters.count < vars.target_harv*0.5) {utils.spawn_new('harv',vars.harv_parts);}
