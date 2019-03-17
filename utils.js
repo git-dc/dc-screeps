@@ -16,19 +16,19 @@ var utils = {
         msg = msg.split('\n');
         var linum = 0;
         for (var item in msg){
-            next_to_object.room.visual.text(msg[item], next_to_object.pos.x+4, next_to_object.pos.y-2+linum*0.75+posit, {size:'0.75', align: 'left', opacity: 1, color:colr});           
-            linum+=1;
+            next_to_object.room.visual.text(msg[item], next_to_object.pos.x + 4, next_to_object.pos.y - 2 + linum * 0.75 + posit, {size: '0.75', align: 'left', opacity: 1, color: colr});           
+            linum += 1;
         }
     },
     
     /** @param {} **/
-    census: function (){
+    census: function () {
 	var msg = "Tick: " + Game.time + " Energy: " + vars.room_energy_ava() + '/' + vars.room_energy_cap();
 	switch (utils.spawnable(vars.best_parts)){
-	case 0: msg+=' - OK'; break;
-	case 1: msg+=' - NOT OK'; break;
-	case 2: msg+=' - VERY NOT OK'; break;
-	case 3: msg+=' - SO BAD, SO VERY BAD'; break;	    
+	case 0: msg += ' - OK'; break;
+	case 1: msg += ' - NOT OK'; break;
+	case 2: msg += ' - VERY NOT OK'; break;
+	case 3: msg += ' - SO BAD'; break;	    
 	}
         var popul = vars.population;
 	popul.total.count = 0;
@@ -38,9 +38,8 @@ var utils = {
 		popul[typ].count = _.filter(Game.creeps, (creep) => creep.memory.role == popul[typ].role).length;
 		popul.total.count += popul[typ].count;
 	    }
-	    msg+='\n'+typ+': '+popul[typ].count + '/' + popul[typ].target_num;
+	    msg += '\n' + typ + ': ' + popul[typ].count + '/' + popul[typ].target_num;
         }
-	// msg+='\nTotal population: ' + popul['total'] +'/'+ vars.target_popul();
         utils.display(msg,Game.spawns['spn1']);
         return popul;
     },
@@ -49,36 +48,34 @@ var utils = {
      * @param {string} typ 
      * @param {Array} parts
      **/
-    spawn_new: function(typ,parts=vars.best_parts){
-        var newName = typ + Game.time%10000;
+    spawn_new: function(typ,parts=vars.best_parts) {
+        var newName = typ + Game.time % 10000;
         var spawn = Game.spawns['spn1'];
-        // console.log('trying to spawn '+typ+' with parts: '+parts)
         if (spawn.spawnCreep(parts, newName,{memory: {role: typ, empty: true}, dryRun: true})==0){
-            // spawn.saying('Spawning new: ' + newName);
             spawn.spawnCreep(parts, newName,{memory: {role: typ, empty: true, resps: vars.resps[typ]}});
         }
     },
     
     /** @param {} **/
-    routines: function(){
+    routines: function() {
     	vars.vis.text("Dan's room",3,1);		
         for(var name in Memory.creeps) {
             if(!Game.creeps[name]) {
                 delete Memory.creeps[name];
-                console.log('Forgetting the fallen: ', name);
+                console.log('forgetting the dead: ', name);
             }
         }
     },
 
     /** @param {Creep} creep **/
-    pickup_dead: function(creep){
+    pickup_dead: function(creep) {
         var sources = creep.room.find(FIND_TOMBSTONES
         // ,{
             // filter: (tomb) => {return (tomb.store["RESOURCE_ENERGY"] > 0)}
         // }
         );
         if(creep.withdraw(sources[0],RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+            creep.moveTo(sources[0], {visualizePathStyle: {stroke: 'black'}});
         }
         return sources.length > 0;
     },
@@ -87,7 +84,7 @@ var utils = {
      * @param {Creep} creep 
      * @param {int} choice
      **/
-    take: function(creep,choice=1){
+    take: function(creep,choice=1) {
         var sources = vars.home.find(FIND_STRUCTURES, {filter: (structure) => {return structure.structureType == STRUCTURE_CONTAINER && structure.store > creep.carryCapacity;}});
         if(creep.withdraw(sources[choice]) == ERR_NOT_IN_RANGE) {
             creep.moveTo(sources[choice], {visualizePathStyle: {stroke: '#ffaa00'}});
@@ -99,7 +96,7 @@ var utils = {
      * @param {Creep} creep 
      * @param {int} choice
      **/
-    collect: function(creep,choice=1){
+    collect: function(creep,choice=1) {
         var sources = vars.home.find(FIND_SOURCES);
         if(creep.harvest(sources[choice]) == ERR_NOT_IN_RANGE) {
             creep.moveTo(sources[choice], {visualizePathStyle: {stroke: '#ffaa00'}});
@@ -111,7 +108,7 @@ var utils = {
      * @param {Creep} creep 
      * @param {int} choice
      **/
-    mine: function(creep,choice=1){
+    mine: function(creep,choice=1) {
         var sources = vars.home.find(FIND_SOURCES);
         if(creep.harvest(sources[choice]) == ERR_NOT_IN_RANGE) {
             creep.moveTo(sources[choice], {visualizePathStyle: {stroke: '#ffaa00'}});
@@ -120,7 +117,7 @@ var utils = {
     },
     
     /** @param {Creep} creep **/
-    maintain: function(creep){
+    maintain: function(creep) {
         var targets = vars.home.find(FIND_STRUCTURES, {
             filter: (structure) => {
                 return (creep.memory.resps.includes(structure.structureType)) && structure.energy < structure.energyCapacity;
@@ -135,7 +132,7 @@ var utils = {
     },
 
     /** @param {Creep} creep **/
-    upg_home_controller: function(creep){
+    upg_home_controller: function(creep) {
 	var status = creep.upgradeController(vars.home.controller);
         if(status == ERR_NOT_IN_RANGE) {
             creep.moveTo(vars.home.controller, {visualizePathStyle: {stroke: 'white'}});
@@ -145,7 +142,7 @@ var utils = {
     },
 
     /** @param {Array} parts **/
-    spawnable: function(parts){
+    spawnable: function(parts) {
 	if (Game.spawns['spn1'].spawnCreep(parts, 'test',{dryRun: true})==0){return 0;}
 	else if (utils.spawn_cost(parts)>vars.room_energy_ava() && utils.spawn_cost(parts)<vars.room_energy_cap()){return 1;}
 	else if (utils.spawn_cost(parts)>vars.room_energy_cap()){return 2;}
@@ -153,7 +150,7 @@ var utils = {
     },
 
     /** @param {Array} parts **/
-    spawn_cost: function(parts){
+    spawn_cost: function(parts) {
         var spawn_cost = 0;
         for (var part in parts){
             if (parts[part] == WORK){spawn_cost+=100}
@@ -167,7 +164,7 @@ var utils = {
      * @param {Creep} creep
      * @param {Object} location 
      **/
-    l2dist: function(creep, location){
+    l2dist: function(creep, location) {
         var targetx = location.pos.x;
         var targety = location.pos.y;
         dist = ((creep.x-targetx)**2 + (creep.y-targety)**2)**0.5;
@@ -178,7 +175,7 @@ var utils = {
      * @param {Creep} creep
      * @param {Object} location 
      **/
-    l1dist: function(creep, location){
+    l1dist: function(creep, location) {
         var targetx = location.pos.x;
         var targety = location.pos.y;
         dist = (creep.x-targetx) + (creep.y-targety);
@@ -189,7 +186,7 @@ var utils = {
      * @param {Creep} creep
      * @param {Object} location 
      **/
-    l8dist: function(creep, location){
+    l8dist: function(creep, location) {
         var targetx = location.pos.x;
         var targety = location.pos.y;
         dist = Math.max(creep.x-targetx, creep.y-targety);
@@ -197,7 +194,7 @@ var utils = {
     },
     
     /** @param {Creep} creep **/
-    gobuild: function (creep){
+    gobuild: function (creep) {
         var targets = vars.home.find(FIND_CONSTRUCTION_SITES);
         if(targets.length>0) {
             if(creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
@@ -208,13 +205,11 @@ var utils = {
     },
 
     /** @param {Creep} creep **/
-    gorepair: function (creep){
+    gorepair: function (creep) {
         console.log("repairing");
-        var targets = vars.home.find(
-            FIND_STRUCTURES, {filter: (structure) => {
-		return (creep.memory.resps.includes(structure.structureType)) && structure.hits < structure.hitsMax;}
-			     }
-        );
+        var targets = vars.home.find(FIND_STRUCTURES, {filter: (structure) => {
+	    return creep.memory.resps.includes(structure.structureType) && structure.hits < structure.hitsMax;}
+	});
         if(targets.length > 0) {
             if(creep.repair(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(targets[0], {visualizePathStyle: {stroke: 'white'}});
@@ -224,7 +219,7 @@ var utils = {
     },
     tower: {
 	/** @param {StructureTower} tower **/
-	run: function(tower){
+	run: function(tower) {
 	    console.log(tower);
             var interlopers = tower.room.findClosestByRange(FIND_CREEPS, {filter: (creep) => {return !creep.my}});
             if(interlopers) {tower.attack(interlopers);}

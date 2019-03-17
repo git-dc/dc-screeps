@@ -20,7 +20,7 @@ var vars = {
     harv_parts: [WORK,CARRY,MOVE],
     resps: {
 	"bld": [STRUCTURE_TOWER],
-	"harv": [STRUCTURE_TOWER,STRUCTURE_EXTENSION]
+	"harv": [STRUCTURE_TOWER,STRUCTURE_EXTENSION,STRUCTURE_SPAWN]
     },
     emergency_parts: [WORK,CARRY,MOVE],
     home: Game.spawns['spn1'].room,
