@@ -23,22 +23,27 @@ var utils = {
         }
     },
 
-    /** @param {Population} population **/
-    sustain: function (population){
+    /** @param {Pop} pop **/
+    sustain: function (pop){
 	
-	if (population.harvesters.count < vars.target_harv*0.5) {utils.spawn_new('harv',vars.harv_parts);}
+	// if (pop.harvesters.count < vars.target_harv*0.5) {utils.spawn_new('harv',vars.harv_parts);}
 	
-	else if(population.upgraders.count < 1) {utils.spawn_new('upg',vars.best_parts);}
+	// else if(pop.upgraders.count < 1) {utils.spawn_new('upg',vars.best_parts);}
 	
-	else if(population.builders.count < vars.target_bld) {utils.spawn_new('bld',vars.best_parts);}
+	// else if(pop.builders.count < vars.target_bld) {utils.spawn_new('bld',vars.best_parts);}
 	
-	else if(population.harvesters.count < vars.target_harv) {utils.spawn_new('harv',vars.harv_parts);}
+	// else if(pop.harvesters.count < vars.target_harv) {utils.spawn_new('harv',vars.harv_parts);}
 	
-	else if(population.upgraders.count < vars.target_upg) {utils.spawn_new('upg',vars.best_parts);}
+	// else if(pop.upgraders.count < vars.target_upg) {utils.spawn_new('upg',vars.best_parts);}
 	
-	return ;
+	// return ;
+	for (typ in pop) {
+	    if (typ == 'total') {break;}
+	    if (pop[typ].count < pop[typ].min) {utils.spawn_new(pop[typ].role,pop[typ].parts); break;}
+	    if (pop[typ].count < pop[typ].trg) {utils.spawn_new(pop[typ].role,pop[typ].parts); break;}
+	}
     },
-
+    
     /** @param {} **/
     upgrade_colony: function() {
 	if (vars.room_energy_cap() <= 300 && vars.stage!=0) {utils.stage_0();}
@@ -47,7 +52,7 @@ var utils = {
 
     /** @param {} **/
     stage_0: function(){
-	vars.population = vars.default_population();
+	vars.population = vars.default_population;
 	vars.stage = 0;
     },
     
@@ -64,13 +69,13 @@ var utils = {
     
     /** @param {} **/
     census: function () {
-	var msg = "Tick: " + Game.time + " Energy: " + vars.room_energy_ava() + '/' + vars.room_energy_cap();
+	var msg = "T." + Game.time + " | E." + vars.room_energy_ava() + ' (' + (100*vars.room_energy_ava()/vars.room_energy_cap()).toFixed(1) + '\%) | S.' + vars.stage + ' |';
 	switch (utils.spawnable(vars.best_parts)){
-	case 0: msg += ' - OK'; break;
-	case 1: msg += ' - SPAWNING'; break;
-	case 2: msg += ' - NOT OK'; break;
-	case 3: msg += ' - VERY NOT OK'; break;
-	case 4: msg += ' - SO BAD'; break;	    
+	case 0: msg += ' OK'; break;
+	case 1: msg += ' SPAWNING'; break;
+	case 2: msg += ' NOT OK'; break;
+	case 3: msg += ' VERY NOT OK'; break;
+	case 4: msg += ' SO BAD'; break;
 	}
 	utils.upgrade_colony();
         var popul = vars.population;
@@ -153,8 +158,10 @@ var utils = {
      **/
     mine: function(creep,choice=1) {
         var sources = vars.home.find(FIND_SOURCES);
+	var containers = vars.home.find(FIND_STRUCTURES, {filter: (struct) => struct.structureType == STRUCTURE_CONTAINER});
         if(creep.harvest(sources[choice]) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(sources[choice], {visualizePathStyle: {stroke: '#ffaa00'}});
+	    creep.moveTo(containers[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+	    // creep.moveTo(sources[choice], {visualizePathStyle: {stroke: '#ffaa00'}});
         }
         return sources.length > 0;
     },
@@ -265,7 +272,7 @@ var utils = {
     tower: {
 	/** @param {StructureTower} tower **/
 	run: function(tower) {
-	    console.log(tower);
+	    // console.log(tower);
             var interlopers = tower.room.findClosestByRange(FIND_CREEPS, {filter: (creep) => {return !creep.my;}});
             if(interlopers) {tower.attack(interlopers);}
             else{

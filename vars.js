@@ -7,8 +7,6 @@
  * mod.thing == 'a thing'; // true
  */
 
-var utils = require('utils');
-
 var vars = {
     default_population: {
 	'miners': {
@@ -35,14 +33,6 @@ var vars = {
 	    parts: [WORK,CARRY,MOVE],
 	    resps: [STRUCTURE_TOWER,STRUCTURE_EXTENSION,STRUCTURE_SPAWN]
 	},
-	'builders': {
-	    role: 'bld',
-	    count: 0,
-	    trg: 2,
-	    min: 0,
-	    parts: [WORK,CARRY,MOVE],
-	    resps: [STRUCTURE_TOWER]
-	},
 	'upgraders': {
 	    role: 'upg',
 	    count: 0,
@@ -50,6 +40,14 @@ var vars = {
 	    min: 1,
 	    parts: [WORK,CARRY,MOVE],
 	    resps: []
+	},
+	'builders': {
+	    role: 'bld',
+	    count: 0,
+	    trg: 2,
+	    min: 0,
+	    parts: [WORK,CARRY,MOVE],
+	    resps: [STRUCTURE_TOWER]
 	},
 	'total': {
 	    role: 'all',
@@ -83,14 +81,6 @@ var vars = {
 	    parts: [WORK,CARRY,MOVE],
 	    resps: [STRUCTURE_TOWER,STRUCTURE_EXTENSION,STRUCTURE_SPAWN]
 	},
-	'builders': {
-	    role: 'bld',
-	    count: 0,
-	    trg: 2,
-	    min: 0,
-	    parts: [WORK,CARRY,MOVE],
-	    resps: [STRUCTURE_TOWER]
-	},
 	'upgraders': {
 	    role: 'upg',
 	    count: 0,
@@ -98,6 +88,14 @@ var vars = {
 	    min: 1,
 	    parts: [WORK,CARRY,MOVE],
 	    resps: []
+	},
+	'builders': {
+	    role: 'bld',
+	    count: 0,
+	    trg: 2,
+	    min: 0,
+	    parts: [WORK,CARRY,MOVE],
+	    resps: [STRUCTURE_TOWER]
 	},
 	'total': {
 	    role: 'all',
@@ -124,9 +122,9 @@ var vars = {
     target_popul: function() {
 	var total = 0;
 	for (var typ in this.population){
-	    if (typ!='total'){total+=this.population[typ].target_num;}
+	    if (typ!='total'){total+=this.population[typ].trg;}
 	};
-	this.population.total.target_num = total;
+	this.population.total.trg = total;
 	return total;
     }
 

@@ -10,7 +10,7 @@ var room_sources = Game.spawns["spn1"].room.find(FIND_SOURCES);
 
 module.exports.loop = function () {
     
-    var population = utils.census(['harv','upg','bld']);
+    var population = utils.census();
 
     if (population.total < 4){vars.best_parts = vars.emergency_parts;} else {worker_parts=vars.best_parts;}
     utils.routines();
