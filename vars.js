@@ -7,14 +7,105 @@
  * mod.thing == 'a thing'; // true
  */
 
+var utils = require('utils');
+
 var vars = {
-    population: {'miners': {role: 'mnr', count: 0, target_num: 4},
-		 'carriers': {role: 'car', count: 0, target_num: 2},
-		 'harvesters': {role: 'harv', count: 0, target_num: 3},
-		 'builders': {role: 'bld', count: 0, target_num: 2},
-		 'upgraders': {role: 'upg', count: 0, target_num: 5},
-		 'total': {role: 'all', count: 0, target_num: 0}
-		},
+    default_population: {
+	'miners': {
+	    role: 'mnr',
+	    count: 0,
+	    trg: 0,
+	    min: 0,
+	    parts: [WORK,WORK,WORK,WORK,CARRY,MOVE],
+	    resps: []
+	},
+	'carriers': {
+	    role: 'car',
+	    count: 0,
+	    trg: 0,
+	    min: 0,
+	    parts: [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE],
+	    resps: []
+	},
+	'harvesters': {
+	    role: 'harv',
+	    count: 0,
+	    trg: 3,
+	    min: 1,
+	    parts: [WORK,CARRY,MOVE],
+	    resps: [STRUCTURE_TOWER,STRUCTURE_EXTENSION,STRUCTURE_SPAWN]
+	},
+	'builders': {
+	    role: 'bld',
+	    count: 0,
+	    trg: 2,
+	    min: 0,
+	    parts: [WORK,CARRY,MOVE],
+	    resps: [STRUCTURE_TOWER]
+	},
+	'upgraders': {
+	    role: 'upg',
+	    count: 0,
+	    trg: 5,
+	    min: 1,
+	    parts: [WORK,CARRY,MOVE],
+	    resps: []
+	},
+	'total': {
+	    role: 'all',
+	    count: 0,
+	    trg: 0
+	}
+    },
+
+    population: {
+	'miners': {
+	    role: 'mnr',
+	    count: 0,
+	    trg: 0,
+	    min: 0,
+	    parts: [WORK,WORK,WORK,WORK,CARRY,MOVE],
+	    resps: [STRUCTURE_TOWER,STRUCTURE_EXTENSION,STRUCTURE_SPAWN]
+	},
+	'carriers': {
+	    role: 'car',
+	    count: 0,
+	    trg: 0,
+	    min: 0,
+	    parts: [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE],
+	    resps: []
+	},
+	'harvesters': {
+	    role: 'harv',
+	    count: 0,
+	    trg: 3,
+	    min: 1,
+	    parts: [WORK,CARRY,MOVE],
+	    resps: [STRUCTURE_TOWER,STRUCTURE_EXTENSION,STRUCTURE_SPAWN]
+	},
+	'builders': {
+	    role: 'bld',
+	    count: 0,
+	    trg: 2,
+	    min: 0,
+	    parts: [WORK,CARRY,MOVE],
+	    resps: [STRUCTURE_TOWER]
+	},
+	'upgraders': {
+	    role: 'upg',
+	    count: 0,
+	    trg: 5,
+	    min: 1,
+	    parts: [WORK,CARRY,MOVE],
+	    resps: []
+	},
+	'total': {
+	    role: 'all',
+	    count: 0,
+	    trg: 0
+	}
+    },
+    stage: 0,
     // best_parts:  [WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE,MOVE],
     best_parts:  [WORK,CARRY,MOVE],
     harv_parts: [WORK,CARRY,MOVE],
@@ -32,10 +123,10 @@ var vars = {
     room_energy_ava: function(){return Game.spawns["spn1"].room.energyAvailable;},
     target_popul: function() {
 	var total = 0;
-	for (var typ in vars.population){
-	    if (typ!='total'){total+=vars.population[typ].target_num;}
+	for (var typ in this.population){
+	    if (typ!='total'){total+=this.population[typ].target_num;}
 	};
-	vars.population.total.target_num = total;
+	this.population.total.target_num = total;
 	return total;
     }
 

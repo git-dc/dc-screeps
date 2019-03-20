@@ -6,19 +6,60 @@
  * var mod = require('utils');
  * mod.thing == 'a thing'; // true
  */
+
 var vars = require('vars');
+
 var utils = {
     /** 
      * @param {string} msg
-     * @param {Object} next_to_object 
+     * @param {Object} obj
      **/
-    display: function(msg, next_to_object,posit=0,colr='white') {
+    display: function(msg,obj=Game.spawns['spn1'],posit=0,colr='white') {
         msg = msg.split('\n');
         var linum = 0;
         for (var item in msg){
-            next_to_object.room.visual.text(msg[item], next_to_object.pos.x + 4, next_to_object.pos.y - 2 + linum * 0.75 + posit, {size: '0.75', align: 'left', opacity: 1, color: colr});           
+            obj.room.visual.text(msg[item], obj.pos.x + 4, obj.pos.y - 2 + linum * 0.75 + posit, {size: '0.75', align: 'left', opacity: 1, color: colr});           
             linum += 1;
         }
+    },
+
+    /** @param {Population} population **/
+    sustain: function (population){
+	
+	if (population.harvesters.count < vars.target_harv*0.5) {utils.spawn_new('harv',vars.harv_parts);}
+	
+	else if(population.upgraders.count < 1) {utils.spawn_new('upg',vars.best_parts);}
+	
+	else if(population.builders.count < vars.target_bld) {utils.spawn_new('bld',vars.best_parts);}
+	
+	else if(population.harvesters.count < vars.target_harv) {utils.spawn_new('harv',vars.harv_parts);}
+	
+	else if(population.upgraders.count < vars.target_upg) {utils.spawn_new('upg',vars.best_parts);}
+	
+	return ;
+    },
+
+    /** @param {} **/
+    upgrade_colony: function() {
+	if (vars.room_energy_cap() <= 300 && vars.stage!=0) {utils.stage_0();}
+	else if (300 < vars.room_energy_cap() <= 600 && vars.stage!=1) {utils.stage_1();}
+    },
+
+    /** @param {} **/
+    stage_0: function(){
+	vars.population = vars.default_population();
+	vars.stage = 0;
+    },
+    
+    /** @param {} **/
+    stage_1: function(){
+	vars.population.miners.trg=1;
+	vars.population.miners.min=1;
+	vars.population.carriers.trg=1;	
+	vars.population.carriers.min=1;
+	vars.population.harvesters.trg=2;
+	// vars.population.harvesters.min=0;
+	vars.stage=1;
     },
     
     /** @param {} **/
@@ -26,10 +67,12 @@ var utils = {
 	var msg = "Tick: " + Game.time + " Energy: " + vars.room_energy_ava() + '/' + vars.room_energy_cap();
 	switch (utils.spawnable(vars.best_parts)){
 	case 0: msg += ' - OK'; break;
-	case 1: msg += ' - NOT OK'; break;
-	case 2: msg += ' - VERY NOT OK'; break;
-	case 3: msg += ' - SO BAD'; break;	    
+	case 1: msg += ' - SPAWNING'; break;
+	case 2: msg += ' - NOT OK'; break;
+	case 3: msg += ' - VERY NOT OK'; break;
+	case 4: msg += ' - SO BAD'; break;	    
 	}
+	utils.upgrade_colony();
         var popul = vars.population;
 	popul.total.count = 0;
 	vars.target_popul();
@@ -38,7 +81,7 @@ var utils = {
 		popul[typ].count = _.filter(Game.creeps, (creep) => creep.memory.role == popul[typ].role).length;
 		popul.total.count += popul[typ].count;
 	    }
-	    msg += '\n' + typ + ': ' + popul[typ].count + '/' + popul[typ].target_num;
+	    msg += '\n' + typ + ': ' + popul[typ].count + '/' + popul[typ].trg;
         }
         utils.display(msg,Game.spawns['spn1']);
         return popul;
@@ -51,7 +94,7 @@ var utils = {
     spawn_new: function(typ,parts=vars.best_parts) {
         var newName = typ + Game.time % 10000;
         var spawn = Game.spawns['spn1'];
-        if (spawn.spawnCreep(parts, newName,{memory: {role: typ, empty: true}, dryRun: true})==0){
+        if (spawn.spawnCreep(parts,newName,{dryRun: true})==0){
             spawn.spawnCreep(parts, newName,{memory: {role: typ, empty: true, resps: vars.resps[typ]}});
         }
     },
@@ -144,18 +187,19 @@ var utils = {
     /** @param {Array} parts **/
     spawnable: function(parts) {
 	if (Game.spawns['spn1'].spawnCreep(parts, 'test',{dryRun: true})==0){return 0;}
-	else if (utils.spawn_cost(parts)>vars.room_energy_ava() && utils.spawn_cost(parts)<vars.room_energy_cap()){return 1;}
-	else if (utils.spawn_cost(parts)>vars.room_energy_cap()){return 2;}
-	return 3;
+	else if (utils.spawn_cost(parts)<=vars.room_energy_ava()){return 1;}
+	else if (utils.spawn_cost(parts)>vars.room_energy_ava() && utils.spawn_cost(parts)<vars.room_energy_cap()){return 2;}
+	else if (utils.spawn_cost(parts)>vars.room_energy_cap()){return 3;}
+	return 4;
     },
 
     /** @param {Array} parts **/
     spawn_cost: function(parts) {
         var spawn_cost = 0;
         for (var part in parts){
-            if (parts[part] == WORK){spawn_cost+=100}
-            else if (parts[part] == CARRY){spawn_cost+=50}
-            else if (parts[part] == MOVE){spawn_cost+=50}
+            if (parts[part] == WORK){spawn_cost+=100;}
+            else if (parts[part] == CARRY){spawn_cost+=50;}
+            else if (parts[part] == MOVE){spawn_cost+=50;}
         }
         return spawn_cost;
     },
@@ -217,11 +261,12 @@ var utils = {
         }
         return targets.length > 0;
     },
+    
     tower: {
 	/** @param {StructureTower} tower **/
 	run: function(tower) {
 	    console.log(tower);
-            var interlopers = tower.room.findClosestByRange(FIND_CREEPS, {filter: (creep) => {return !creep.my}});
+            var interlopers = tower.room.findClosestByRange(FIND_CREEPS, {filter: (creep) => {return !creep.my;}});
             if(interlopers) {tower.attack(interlopers);}
             else{
 		var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {

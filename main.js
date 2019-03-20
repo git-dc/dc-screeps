@@ -16,8 +16,7 @@ module.exports.loop = function () {
     utils.routines();
     
     var towers = vars.home.find(FIND_STRUCTURES, {filter: (struct) => struct.structureType == STRUCTURE_TOWER});
-    for (var tower in towers){
-	utils.tower.run(tower);
+    for (var tower in towers){utils.tower.run(tower);}
 	// console.log(tower);
         // var interlopers = vars.home.find(FIND_CREEPS, {filter: (creep) => {return !creep.my}});
         // if(interlopers.length > 0) {
@@ -32,12 +31,17 @@ module.exports.loop = function () {
 	//     }
         // }
    	
-    }
+    // }
     
     if (population.harvesters.count < vars.target_harv*0.5) {utils.spawn_new('harv',vars.harv_parts);}
-    else if(population.upgraders.count < 1) {utils.spawn_new('upg',vars.best_parts);}
+
+    else if(population.upgraders.count < 1)
+{utils.spawn_new('upg',vars.best_parts);}
+
     else if(population.builders.count < vars.target_bld) {utils.spawn_new('bld',vars.best_parts);}
+
     else if(population.harvesters.count < vars.target_harv) {utils.spawn_new('harv',vars.harv_parts);}
+
     else if(population.upgraders.count < vars.target_upg) {utils.spawn_new('upg',vars.best_parts);}
 
     for(var name in Game.creeps) {
