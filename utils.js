@@ -164,7 +164,7 @@ var utils = {
     },
     
     /** @param {Creep} creep **/
-    maintain: function(creep) {
+    maintain: function(creep) { // top up energy storage structures
         var targets = vars.home.find(FIND_STRUCTURES, {
             filter: (structure) => {
                 return (creep.memory.resps.includes(structure.structureType)) && structure.energy < structure.energyCapacity;
@@ -239,6 +239,21 @@ var utils = {
         var targety = location.pos.y;
         dist = Math.max(creep.x-targetx, creep.y-targety);
 	return dist;
+    },
+    
+    /** @param {Object} target **/
+    choose_source: function(target) {
+	sources = vars.home.find(FIND_SOURCES);
+	var closest_source = sources[0];
+	var min_dist = 200;
+	for (var source in sources){
+	    dist = utils.l8dist(source, target);
+	    if (dist < min_dist){
+		min_dist = dist;
+		closest_source = source;
+	    };
+	};
+	return source;
     },
     
     /** @param {Creep} creep **/
