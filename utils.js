@@ -19,25 +19,13 @@ var utils = {
         var linum = 0;
         for (var item in msg){
             // obj.room.visual.text(msg[item], obj.pos.x + 4, obj.pos.y - 2 + linum * 0.75 + posit, {size: '0.75', align: 'left', opacity: 1, color: colr});           
-	    obj.room.visual.text(msg[item], 20, obj.pos.y - 2 + linum * 0.75 + posit, {size: '0.75', align: 'left', opacity: 1, color: colr});           
+	    obj.room.visual.text(msg[item], 2, obj.pos.y - 2 + linum * 0.75 + posit, {size: '0.75', align: 'left', opacity: 1, color: colr});           
 	    linum += 1;
         }
     },
 
     /** @param {Pop} pop **/
     sustain: function (pop){
-	
-	// if (pop.harvesters.count < vars.target_harv*0.5) {utils.spawn_new('harv',vars.harv_parts);}
-	
-	// else if(pop.upgraders.count < 1) {utils.spawn_new('upg',vars.best_parts);}
-	
-	// else if(pop.builders.count < vars.target_bld) {utils.spawn_new('bld',vars.best_parts);}
-	
-	// else if(pop.harvesters.count < vars.target_harv) {utils.spawn_new('harv',vars.harv_parts);}
-	
-	// else if(pop.upgraders.count < vars.target_upg) {utils.spawn_new('upg',vars.best_parts);}
-	
-	// return ;
 	for (var typ in pop) {
 	    if (typ == 'total') {break;}
 	    if (pop[typ].count < pop[typ].min) {utils.spawn_new(pop[typ].role,pop[typ].parts); break;}
@@ -127,12 +115,12 @@ var utils = {
         if(creep.withdraw(sources[0],RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             creep.moveTo(sources[0], {visualizePathStyle: {stroke: 'black'}});
         }
-	// const target = creep.pos.findClosestByRange(FIND_DROPPED_ENERGY);
-	// if(target) {
-	//     if(creep.pickup(target) == ERR_NOT_IN_RANGE) {
-	// 	creep.moveTo(target);	
-	//     }
-	// }
+	const target = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES);
+	if(target) {
+	    if(creep.pickup(target) == ERR_NOT_IN_RANGE) {
+		creep.moveTo(target);	
+	    }
+	}
         return sources.length > 0;
     },
     
