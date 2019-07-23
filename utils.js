@@ -18,8 +18,9 @@ var utils = {
         msg = msg.split('\n');
         var linum = 0;
         for (var item in msg){
-            obj.room.visual.text(msg[item], obj.pos.x + 4, obj.pos.y - 2 + linum * 0.75 + posit, {size: '0.75', align: 'left', opacity: 1, color: colr});           
-            linum += 1;
+            // obj.room.visual.text(msg[item], obj.pos.x + 4, obj.pos.y - 2 + linum * 0.75 + posit, {size: '0.75', align: 'left', opacity: 1, color: colr});           
+	    obj.room.visual.text(msg[item], 20, obj.pos.y - 2 + linum * 0.75 + posit, {size: '0.75', align: 'left', opacity: 1, color: colr});           
+	    linum += 1;
         }
     },
 
