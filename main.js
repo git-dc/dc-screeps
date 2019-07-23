@@ -16,7 +16,7 @@ module.exports.loop = function () {
     utils.routines();
     
     var towers = vars.home.find(FIND_STRUCTURES, {filter: (struct) => struct.structureType == STRUCTURE_TOWER});
-    for (var tower in towers){utils.tower.run(tower);}
+    for (var tower in towers){utils.tower.run(towers[tower]);}
 	// console.log(tower);
         // var interlopers = vars.home.find(FIND_CREEPS, {filter: (creep) => {return !creep.my}});
         // if(interlopers.length > 0) {

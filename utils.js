@@ -37,7 +37,7 @@ var utils = {
 	// else if(pop.upgraders.count < vars.target_upg) {utils.spawn_new('upg',vars.best_parts);}
 	
 	// return ;
-	for (typ in pop) {
+	for (var typ in pop) {
 	    if (typ == 'total') {break;}
 	    if (pop[typ].count < pop[typ].min) {utils.spawn_new(pop[typ].role,pop[typ].parts); break;}
 	    if (pop[typ].count < pop[typ].trg) {utils.spawn_new(pop[typ].role,pop[typ].parts); break;}
@@ -77,7 +77,8 @@ var utils = {
 	case 3: msg += ' VERY NOT OK'; break;
 	case 4: msg += ' SO BAD'; break;
 	}
-	utils.upgrade_colony();
+	// utils.upgrade_colony();
+	utils.stage_0();
         var popul = vars.population;
 	popul.total.count = 0;
 	vars.target_popul();
@@ -96,7 +97,7 @@ var utils = {
      * @param {string} typ 
      * @param {Array} parts
      **/
-    spawn_new: function(typ,parts=vars.best_parts) {
+    spawn_new: function(typ, parts=vars.best_parts) {
         var newName = typ + Game.time % 10000;
         var spawn = Game.spawns['spn1'];
         if (spawn.spawnCreep(parts,newName,{dryRun: true})==0){
@@ -125,6 +126,12 @@ var utils = {
         if(creep.withdraw(sources[0],RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             creep.moveTo(sources[0], {visualizePathStyle: {stroke: 'black'}});
         }
+	// const target = creep.pos.findClosestByRange(FIND_DROPPED_ENERGY);
+	// if(target) {
+	//     if(creep.pickup(target) == ERR_NOT_IN_RANGE) {
+	// 	creep.moveTo(target);	
+	//     }
+	// }
         return sources.length > 0;
     },
     
@@ -132,11 +139,12 @@ var utils = {
      * @param {Creep} creep 
      * @param {int} choice
      **/
-    take: function(creep,choice=1) {
+    take: function(creep,choice=0) {
         var sources = vars.home.find(FIND_STRUCTURES, {filter: (structure) => {return structure.structureType == STRUCTURE_CONTAINER && structure.store > creep.carryCapacity;}});
         if(creep.withdraw(sources[choice]) == ERR_NOT_IN_RANGE) {
             creep.moveTo(sources[choice], {visualizePathStyle: {stroke: '#ffaa00'}});
         }
+	
         return sources.length > 0;
     },
     
@@ -273,7 +281,7 @@ var utils = {
 	/** @param {StructureTower} tower **/
 	run: function(tower) {
 	    // console.log(tower);
-            var interlopers = tower.room.findClosestByRange(FIND_CREEPS, {filter: (creep) => {return !creep.my;}});
+            var interlopers = tower.pos.findClosestByRange(FIND_CREEPS, {filter: (creep) => {return !creep.my;}});
             if(interlopers) {tower.attack(interlopers);}
             else{
 		var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {

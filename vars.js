@@ -22,7 +22,7 @@ var vars = {
 	    count: 0,
 	    trg: 0,
 	    min: 0,
-	    parts: [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE],
+	    parts: [CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE],
 	    resps: []
 	},
 	'harvesters': {

@@ -6,7 +6,7 @@ var miner = {
     run: function(creep) {
         creep.memory.empty=true;
         if(creep.memory.empty) {
-            if (utils.mine(creep)){}
+            if (utils.mine(creep)){creep.drop(RESOURCE_ENERGY);}
 	    else {console.log('Miner '+creep.name+' failed to mine');}x
         }
     }

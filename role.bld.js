@@ -13,7 +13,7 @@ var builder = {
 	}
 	else{
             if (utils.gobuild(creep)){}
-            // else if(builder.gorepair(creep)){}
+            else if(builder.gorepair(creep)){}
             else if(utils.maintain(creep)){}
 	    else {console.log('Builder '+creep.name+' failed to contribute');}
         }
